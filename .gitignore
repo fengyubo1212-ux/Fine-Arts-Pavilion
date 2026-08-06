@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+*.log
+
+# 本地开发上传的图片（seed 数据用公网 URL，线上不引用这些文件）
+frontend/public/images/

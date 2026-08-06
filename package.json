@@ -1,0 +1,12 @@
+{
+  "name": "art-exhibition",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && node index.js",
+    "client": "cd frontend && npx vite --host"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
