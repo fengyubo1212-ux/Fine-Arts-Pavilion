@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/api' });
+// 生产环境由 .env.production 提供 Render 后端地址，开发环境回退 /api（走 vite proxy）
+const BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+
+// 覆盖 admin 表单/列表里的裸 axios 调用（如 /api/upload、PATCH /api/artworks/...）
+axios.defaults.baseURL = BASE;
+
+const api = axios.create({ baseURL: BASE });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');

@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getExhibition } from '../../api';
 import Lightbox from '../../components/Lightbox';
-import ParallaxHero from '../../components/ParallaxHero';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -44,6 +43,7 @@ export default function ExhibitionDetail() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [lightbox, setLightbox] = useState(false);
+  const bannerRef = useRef(null);
   const titleRef = useRef(null);
   const metaRef = useRef(null);
   const bodyRef = useRef(null);
@@ -57,7 +57,7 @@ export default function ExhibitionDetail() {
   useEffect(() => {
     if (!data) return;
     const ctx = gsap.context(() => {
-      const els = [titleRef.current, metaRef.current, bodyRef.current].filter(Boolean);
+      const els = [bannerRef.current, titleRef.current, metaRef.current, bodyRef.current].filter(Boolean);
       gsap.set(els, { opacity: 0, y: 60 });
       gsap.to(els, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out' });
     });
@@ -88,14 +88,10 @@ export default function ExhibitionDetail() {
     <>
     <div className="detail" style={{ paddingTop: 0 }}>
       {data.poster_url && (
-        <div onClick={() => setLightbox(true)} style={{ cursor: 'pointer' }}>
-          <ParallaxHero
-            image={data.poster_url}
-            title={data.title}
-            subtitle={data.description?.slice(0, 120)}
-            meta={<>{data.start_date} ~ {data.end_date} · {data.location}</>}
-          />
-        </div>
+        <img className="banner" ref={bannerRef} src={data.poster_url} alt={data.title}
+          onClick={() => setLightbox(true)}
+          style={{ cursor: 'pointer' }}
+        />
       )}
       <h1 ref={titleRef} style={{ marginTop: 40 }}>{data.title}</h1>
       <div className="meta" ref={metaRef}>
