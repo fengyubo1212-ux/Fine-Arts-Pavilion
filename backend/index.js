@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const uploadDir = path.join(__dirname, '..', 'client', 'public', 'images');
+const uploadDir = path.join(__dirname, '..', 'frontend', 'public', 'images');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
@@ -36,7 +36,12 @@ app.get('/api/health', (req, res) => {
   res.json({ code: 0, data: 'ok' });
 });
 
-const PORT = 3001;
+// Render 健康检查打到根路径，返回 200 即可
+app.get('/', (req, res) => {
+  res.send('ok');
+});
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
