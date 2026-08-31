@@ -111,6 +111,26 @@ export default function CustomCursor() {
       }
     };
 
+    /* ---- Mouse up: reset cursor state ---- */
+    const onUp = () => {
+      if (hoverTarget.current) {
+        hoverTarget.current = null;
+        // Restore rings to circles
+        rings.forEach((r, i) => {
+          const def = RINGS[i];
+          gsap.to(r, {
+            xPercent: -50, yPercent: -50,
+            width: def.size, height: def.size,
+            borderRadius: '50%',
+            borderColor: `rgba(212,168,96,${def.opacity})`,
+            borderWidth: def.width,
+            duration: 0.4, ease: 'power3.out',
+          });
+        });
+        gsap.to(dot, { scale: 1, duration: 0.15 });
+      }
+    };
+
     /* ---- Animation loop ---- */
     let angle = 0;
     const animate = () => {
@@ -147,12 +167,14 @@ export default function CustomCursor() {
     document.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('mouseover', onOver, { passive: true });
     document.addEventListener('mousedown', onClick, { passive: true });
+    document.addEventListener('mouseup', onUp, { passive: true });
     animate();
 
     return () => {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('mouseup', onUp);
     };
   }, []);
 
