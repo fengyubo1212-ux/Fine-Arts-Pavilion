@@ -17,7 +17,6 @@ export default function CustomCursor() {
   const dotPos = useRef({ x: -100, y: -100 });
   const triPos = useRef({ x: -100, y: -100 });
   const ringPositions = useRef(RINGS.map(() => ({ x: -100, y: -100 })));
-  const hoverTarget = useRef(null);
 
   // Triangle geometry
   const S = 40;
@@ -41,52 +40,7 @@ export default function CustomCursor() {
       mouse.current = { x: e.clientX, y: e.clientY };
     };
 
-    /* ---- Hover: only rings morph ---- */
-    const onOver = (e) => {
-      const t = e.target.closest('button,.btn');
-      if (!t) {
-        if (hoverTarget.current) {
-          hoverTarget.current = null;
-          // Restore rings to circles
-          rings.forEach((r, i) => {
-            const def = RINGS[i];
-            gsap.to(r, {
-              xPercent: -50, yPercent: -50,
-              width: def.size, height: def.size,
-              borderRadius: '50%',
-              borderColor: `rgba(212,168,96,${def.opacity})`,
-              borderWidth: def.width,
-              duration: 0.4, ease: 'power3.out',
-            });
-          });
-          gsap.to(dot, { scale: 1, duration: 0.15 });
-        }
-        return;
-      }
-      if (t === hoverTarget.current) return;
-      hoverTarget.current = t;
-      const rect = t.getBoundingClientRect();
-
-      // Morph rings to wrap button — inherit its border-radius
-      const computed = getComputedStyle(t);
-      const btnRadius = computed.borderRadius.split(' ')[0]; // e.g. "50%" or "999px"
-
-      rings.forEach((r, i) => {
-        const p = 5 + i * 5;
-        const def = RINGS[i];
-        gsap.to(r, {
-          x: rect.left - p, y: rect.top - p,
-          xPercent: 0, yPercent: 0,
-          width: rect.width + p * 2,
-          height: rect.height + p * 2,
-          borderRadius: btnRadius,
-          borderColor: `rgba(212,168,96,${def.opacity + 0.15})`,
-          borderWidth: def.width + 0.5,
-          duration: 0.35, ease: 'power3.out',
-        });
-      });
-      gsap.to(dot, { scale: 0, duration: 0.1 });
-    };
+    /* ---- Hover: removed button morph effect ---- */
 
     /* ---- Click: heartbeat pulse ---- */
     const onClick = () => {
@@ -97,38 +51,16 @@ export default function CustomCursor() {
           gsap.to(triWrapper, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
         }
       });
-      // Pulse rings (only if not hovering a button)
-      if (!hoverTarget.current) {
-        rings.forEach((r, i) => {
-          const def = RINGS[i];
-          gsap.to(r, {
-            scale: 1.3, duration: 0.12, ease: 'power2.out',
-            onComplete: () => {
-              gsap.to(r, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
-            }
-          });
+      // Pulse rings
+      rings.forEach((r, i) => {
+        const def = RINGS[i];
+        gsap.to(r, {
+          scale: 1.3, duration: 0.12, ease: 'power2.out',
+          onComplete: () => {
+            gsap.to(r, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
+          }
         });
-      }
-    };
-
-    /* ---- Mouse up: reset cursor state ---- */
-    const onUp = () => {
-      if (hoverTarget.current) {
-        hoverTarget.current = null;
-        // Restore rings to circles
-        rings.forEach((r, i) => {
-          const def = RINGS[i];
-          gsap.to(r, {
-            xPercent: -50, yPercent: -50,
-            width: def.size, height: def.size,
-            borderRadius: '50%',
-            borderColor: `rgba(212,168,96,${def.opacity})`,
-            borderWidth: def.width,
-            duration: 0.4, ease: 'power3.out',
-          });
-        });
-        gsap.to(dot, { scale: 1, duration: 0.15 });
-      }
+      });
     };
 
     /* ---- Animation loop ---- */
@@ -141,20 +73,18 @@ export default function CustomCursor() {
       dotPos.current.y += (my - dotPos.current.y) * 0.25;
       gsap.set(dot, { x: dotPos.current.x, y: dotPos.current.y });
 
-      if (!hoverTarget.current) {
-        // Triangle wrapper follows dot (dragging behind)
-        triPos.current.x += (dotPos.current.x - triPos.current.x) * 0.08;
-        triPos.current.y += (dotPos.current.y - triPos.current.y) * 0.08;
-        gsap.set(triWrapper, { x: triPos.current.x, y: triPos.current.y });
+      // Triangle wrapper follows dot (dragging behind)
+      triPos.current.x += (dotPos.current.x - triPos.current.x) * 0.08;
+      triPos.current.y += (dotPos.current.y - triPos.current.y) * 0.08;
+      gsap.set(triWrapper, { x: triPos.current.x, y: triPos.current.y });
 
-        // Each ring follows the previous (or dot for innermost)
-        RINGS.forEach((def, i) => {
-          const target = i === 0 ? dotPos.current : ringPositions.current[i - 1];
-          ringPositions.current[i].x += (target.x - ringPositions.current[i].x) * def.delay;
-          ringPositions.current[i].y += (target.y - ringPositions.current[i].y) * def.delay;
-          gsap.set(rings[i], { x: ringPositions.current[i].x, y: ringPositions.current[i].y });
-        });
-      }
+      // Each ring follows the previous (or dot for innermost)
+      RINGS.forEach((def, i) => {
+        const target = i === 0 ? dotPos.current : ringPositions.current[i - 1];
+        ringPositions.current[i].x += (target.x - ringPositions.current[i].x) * def.delay;
+        ringPositions.current[i].y += (target.y - ringPositions.current[i].y) * def.delay;
+        gsap.set(rings[i], { x: ringPositions.current[i].x, y: ringPositions.current[i].y });
+      });
 
       // Triangles rotate independently (always)
       angle += 0.02;
@@ -165,9 +95,7 @@ export default function CustomCursor() {
     };
 
     document.addEventListener('mousemove', onMove, { passive: true });
-    document.addEventListener('mouseover', onOver, { passive: true });
     document.addEventListener('mousedown', onClick, { passive: true });
-    document.addEventListener('mouseup', onUp, { passive: true });
 
     // Reset cursor to center on page transition
     const onTransitionComplete = () => {
@@ -177,8 +105,6 @@ export default function CustomCursor() {
       dotPos.current = { x: centerX, y: centerY };
       triPos.current = { x: centerX, y: centerY };
       ringPositions.current = RINGS.map(() => ({ x: centerX, y: centerY }));
-      // Also reset hover state
-      hoverTarget.current = null;
       rings.forEach((r, i) => {
         const def = RINGS[i];
         gsap.set(r, {
@@ -199,9 +125,7 @@ export default function CustomCursor() {
 
     return () => {
       document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mousedown', onClick);
-      document.removeEventListener('mouseup', onUp);
       document.removeEventListener('page-transition-complete', onTransitionComplete);
     };
   }, []);
