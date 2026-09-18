@@ -98,7 +98,11 @@ export default function ExhibitionDetail() {
         <span>{data.start_date} ~ {data.end_date}</span>
         <span>{data.location}</span>
       </div>
-      <p className="body" ref={bodyRef}>{data.description}</p>
+      <div className="body" ref={bodyRef}>
+        {data.description.split('\n').filter(p => p.trim()).map((paragraph, i) => (
+          <p key={i}>{paragraph}</p>
+        ))}
+      </div>
 
       {data.artworks?.length > 0 && (
         <>

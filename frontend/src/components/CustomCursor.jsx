@@ -168,6 +168,33 @@ export default function CustomCursor() {
     document.addEventListener('mouseover', onOver, { passive: true });
     document.addEventListener('mousedown', onClick, { passive: true });
     document.addEventListener('mouseup', onUp, { passive: true });
+
+    // Reset cursor to center on page transition
+    const onTransitionComplete = () => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      mouse.current = { x: centerX, y: centerY };
+      dotPos.current = { x: centerX, y: centerY };
+      triPos.current = { x: centerX, y: centerY };
+      ringPositions.current = RINGS.map(() => ({ x: centerX, y: centerY }));
+      // Also reset hover state
+      hoverTarget.current = null;
+      rings.forEach((r, i) => {
+        const def = RINGS[i];
+        gsap.set(r, {
+          x: centerX, y: centerY,
+          xPercent: -50, yPercent: -50,
+          width: def.size, height: def.size,
+          borderRadius: '50%',
+          borderColor: `rgba(212,168,96,${def.opacity})`,
+          borderWidth: def.width,
+        });
+      });
+      gsap.set(dot, { x: centerX, y: centerY, xPercent: -50, yPercent: -50, scale: 1 });
+      gsap.set(triWrapper, { x: centerX, y: centerY, xPercent: -50, yPercent: -50, scale: 1 });
+    };
+    document.addEventListener('page-transition-complete', onTransitionComplete);
+
     animate();
 
     return () => {
@@ -175,6 +202,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mousedown', onClick);
       document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('page-transition-complete', onTransitionComplete);
     };
   }, []);
 

@@ -54,7 +54,11 @@ export default function ArtworkDetail() {
             </span>
           )}
         </div>
-        <p className="body" ref={bodyRef}>{data.description}</p>
+        <div className="body" ref={bodyRef}>
+          {data.description.split('\n').filter(p => p.trim()).map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
       </div>
       {lightbox && (
         <Lightbox src={data.image_url} alt={data.title} onClose={() => setLightbox(false)} />
