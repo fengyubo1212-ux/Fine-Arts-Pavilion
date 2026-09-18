@@ -40,18 +40,14 @@ export default function CustomCursor() {
       mouse.current = { x: e.clientX, y: e.clientY };
     };
 
-    /* ---- Hover: removed button morph effect ---- */
-
     /* ---- Click: heartbeat pulse ---- */
     const onClick = () => {
-      // Pulse triangles
       gsap.to(triWrapper, {
         scale: 1.35, duration: 0.12, ease: 'power2.out',
         onComplete: () => {
           gsap.to(triWrapper, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
         }
       });
-      // Pulse rings
       rings.forEach((r, i) => {
         const def = RINGS[i];
         gsap.to(r, {
@@ -186,4 +182,3 @@ export default function CustomCursor() {
     </>
   );
 }
-// cache bust Fri Sep 18 13:06:36     2026

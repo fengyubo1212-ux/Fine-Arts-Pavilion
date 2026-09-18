@@ -58,7 +58,7 @@ input, textarea, select { font-family: inherit; font-size: 18px; }
 /* Public */
 .public-main { min-height: 100vh; position: relative; z-index: 1; }
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; padding: 60px 40px; max-width: 1400px; margin: 0 auto; }
-.card { background: #111116; border-radius: 20px; overflow: hidden; border: 1px solid #1a1a24; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); transform-style: preserve-3d; }
+.card { background: #111116; border-radius: 20px; overflow: hidden; border: 1px solid #1a1a24; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); transform-style: preserve-3d; touch-action: pan-y; }
 .card:hover { border-color: rgba(200,168,112,0.4); box-shadow: 0 24px 80px rgba(0,0,0,0.6); transform: translateY(-4px); }
 .card-img-wrap { overflow: hidden; }
 .card img { width: 100%; height: 300px; object-fit: cover; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
@@ -70,7 +70,7 @@ input, textarea, select { font-family: inherit; font-size: 18px; }
 .card-tag { display: inline-block; padding: 4px 12px; border-radius: 100px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(200,168,112,0.1); color: #c8a870; margin-bottom: 12px; }
 
 .detail { max-width: 1000px; margin: 0 auto; padding: 80px 20px; }
-.detail img.banner { width: 100%; max-height: 520px; object-fit: cover; border-radius: 24px; margin-bottom: 48px; border: 1px solid #1e1e28; }
+.detail img.banner { width: 100%; max-height: 520px; object-fit: cover; border-radius: 24px; margin-bottom: 48px; border: 1px solid #1e1e28; touch-action: pan-y; }
 .detail h1 { font-size: clamp(36px,5vw,56px); margin-bottom: 20px; color: #e0dcd5; letter-spacing: 0.05em; font-family: 'Georgia','Noto Serif SC','STSong',serif; }
 .detail .meta { color: #6e6a64; font-size: 16px; margin-bottom: 32px; display: flex; gap: 28px; flex-wrap: wrap; }
 .detail .meta a { color: #c8a870; transition: color 0.2s; }
@@ -80,16 +80,7 @@ input, textarea, select { font-family: inherit; font-size: 18px; }
   text-align: justify; max-width: 740px; margin: 0 auto; padding: 40px 0;
   border-top: 1px solid #1a1a24; border-bottom: 1px solid #1a1a24;
   font-family: 'Georgia','Noto Serif SC','Source Han Serif SC','STSong',serif;
-}
-.detail .body p {
-  text-indent: 2em;
-  margin: 0 0 1em 0;
-}
-.detail .body p:first-child {
-  margin-top: 0;
-}
-.detail .body p:last-child {
-  margin-bottom: 0;
+  text-indent: 2em; white-space: pre-line;
 }
 
 .login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #08080a; }

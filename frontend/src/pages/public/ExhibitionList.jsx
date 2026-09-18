@@ -27,7 +27,7 @@ function ExhibitionCard({ exhibition }) {
         transformStyle: 'preserve-3d',
       }}>
         <div className="card-img-wrap">
-          <img src={exhibition.poster_url || 'https://picsum.photos/seed/exhibition/800/500'} alt={exhibition.title} />
+          <img src={exhibition.poster_url || './images/seed-exhibition1.jpg'} alt={exhibition.title} />
         </div>
         <div className="card-body">
           <span className="card-tag">{exhibition.location}</span>

@@ -32,11 +32,7 @@ export default function PageTransition({ children }) {
         gsap.to(wrapper, {
           rotateY: 0, rotateX: 0, opacity: 1, z: 0,
           duration: 0.8, ease: 'power3.out',
-          onComplete: () => {
-          animating.current = false;
-          // Reset cursor to center on page transition
-          document.dispatchEvent(new CustomEvent('page-transition-complete'));
-        }
+          onComplete: () => { animating.current = false; }
         });
       }
     });

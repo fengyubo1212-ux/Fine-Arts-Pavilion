@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
-const FALLBACK = 'https://picsum.photos/seed/carousel/1200/500';
+const FALLBACK = './images/seed-exhibition1.jpg';
 
 export default function Carousel({ items = [], interval = 5000 }) {
   const [current, setCurrent] = useState(0);

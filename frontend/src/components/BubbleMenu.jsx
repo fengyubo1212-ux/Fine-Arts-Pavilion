@@ -8,8 +8,7 @@ const MENU_ITEMS = [
   { label: '首页', href: '/' },
   { label: '展览', href: '/exhibitions' },
   { label: '艺术品', href: '/artworks' },
-  { label: '艺术家', href: '/artists' },
-  { label: '管理', href: '/admin/login' }
+  { label: '艺术家', href: '/artists' }
 ];
 
 function calcCircleGeometry(w, h) {

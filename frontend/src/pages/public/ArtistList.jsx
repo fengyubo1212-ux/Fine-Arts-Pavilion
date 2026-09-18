@@ -27,7 +27,7 @@ function ArtistCard({ artist }) {
         transformStyle: 'preserve-3d',
       }}>
         <div style={{ padding: '32px 24px 0' }}>
-          <img src={artist.avatar_url || 'https://picsum.photos/seed/artist/400/400'}
+          <img src={artist.avatar_url || './images/seed-artist1.jpg'}
             style={{ width: 120, height: 120, borderRadius: '50%', margin: '0 auto', objectFit: 'cover', border: '3px solid #1e1e28' }}
             alt={artist.name} />
         </div>

@@ -1,14 +1,15 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { getExhibitions, getArtworks, getSettings } from '../../api';
 import Carousel from '../../components/Carousel';
 import ShuffleText from '../../components/ShuffleText';
+import useTilt3D from '../../hooks/useTilt3D';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FALLBACK_IMAGE = 'https://picsum.photos/seed/placeholder/800/500';
+const FALLBACK_IMAGE = './images/seed-artwork1.jpg';
 const MAX_ITEMS = 6;
 
 function pickRandom(arr, n) {
@@ -17,22 +18,11 @@ function pickRandom(arr, n) {
 }
 
 function TiltCard({ to, image, title, subtitle, tag }) {
-  const ref = useRef(null);
-  const onMove = useCallback((e) => {
-    if (!ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    ref.current.style.transform = `perspective(600px) rotateY(${(x - 0.5) * 35}deg) rotateX(${(y - 0.5) * -25}deg) scale3d(1.04,1.04,1.04) translateZ(20px)`;
-  }, []);
-  const onLeave = useCallback(() => {
-    if (!ref.current) return;
-    ref.current.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) scale3d(1,1,1) translateZ(0)';
-  }, []);
+  const { tiltRef, handlers, onClick } = useTilt3D();
   return (
     <Link to={to} className="card" data-cursor="magnetic"
-      onMouseMove={onMove} onMouseLeave={onLeave}>
-      <div ref={ref} className="card-tilt-inner" style={{
+      {...handlers} onClick={onClick}>
+      <div ref={tiltRef} className="card-tilt-inner" style={{
         transition: 'transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)',
         transformStyle: 'preserve-3d',
       }}>

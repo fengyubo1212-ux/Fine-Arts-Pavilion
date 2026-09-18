@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { getArtwork } from '../../api';
 import Lightbox from '../../components/Lightbox';
+import useTilt3D from '../../hooks/useTilt3D';
 
 export default function ArtworkDetail() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function ArtworkDetail() {
   const titleRef = useRef(null);
   const metaRef = useRef(null);
   const bodyRef = useRef(null);
+  const { tiltRef, handlers, onClick } = useTilt3D();
 
   useEffect(() => {
     getArtwork(id).then((res) => setData(res.data));
@@ -33,10 +35,13 @@ export default function ArtworkDetail() {
     <>
       <div className="detail">
         {data.image_url && (
-          <img className="banner" ref={bannerRef} src={data.image_url} alt={data.title}
-            onClick={() => setLightbox(true)}
-            style={{ cursor: 'pointer' }}
-          />
+          <div ref={tiltRef} className="banner-tilt">
+            <img className="banner" ref={bannerRef} src={data.image_url} alt={data.title}
+              {...handlers}
+              onClick={(e) => { onClick(e); if (!e.defaultPrevented) setLightbox(true); }}
+              style={{ cursor: 'pointer' }}
+            />
+          </div>
         )}
         <h1 ref={titleRef}>{data.title}</h1>
         <div className="meta" ref={metaRef}>
@@ -54,11 +59,7 @@ export default function ArtworkDetail() {
             </span>
           )}
         </div>
-        <div className="body" ref={bodyRef}>
-          {data.description.split('\n').filter(p => p.trim()).map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
+        <p className="body" ref={bodyRef}>{data.description}</p>
       </div>
       {lightbox && (
         <Lightbox src={data.image_url} alt={data.title} onClose={() => setLightbox(false)} />
