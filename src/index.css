@@ -80,7 +80,13 @@ input, textarea, select { font-family: inherit; font-size: 18px; }
   text-align: justify; max-width: 740px; margin: 0 auto; padding: 40px 0;
   border-top: 1px solid #1a1a24; border-bottom: 1px solid #1a1a24;
   font-family: 'Georgia','Noto Serif SC','Source Han Serif SC','STSong',serif;
-  text-indent: 2em; white-space: pre-line;
+}
+.detail .body p {
+  text-indent: 2em;
+  margin-bottom: 1.5em;
+}
+.detail .body p:last-child {
+  margin-bottom: 0;
 }
 
 .login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #08080a; }
